@@ -4,5 +4,6 @@ describe App do
   it "should have login link" do
     get "/"
     expect(last_response).to be_ok
+    expect(last_response.body).to match "Login"
   end
 end
