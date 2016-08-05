@@ -25,6 +25,13 @@ class App < Sinatra::Base
 
   get "/auth/:provider/callback" do
     result = request.env['omniauth.auth']
+    session[:uid] = result["uid"]
+    session[:access_token] = result["credentials"]["token"]
+    session[:name] = result["info"]["name"]
+    session[:email] = result["info"]["email"]
+    session[:image] = result["info"]["image"]
+    session[:url] = result["info"]["urls"][ result["provider"] ]
+    redirect to "/"
     erb "<a href='/'>Top</a><br>
       <h1>#{params[:provider]}</h1>
       <pre>#{JSON.pretty_generate(result)}</pre>"

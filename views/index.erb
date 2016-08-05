@@ -21,7 +21,13 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/auth/mendeley"><span class="glyphicon glyphicon-log-in"></span> Login with Mendeley</a></li>
+          <% if session[:uid] and session[:name] %>
+            <li><a href="<%=h session[:url] %>">
+                <img src="<%=h session[:image] %>" style="width:24px;height:24px"/>
+                <%=h session[:name] %></a></li>
+          <% else %>
+            <li><a href="/auth/mendeley"><span class="glyphicon glyphicon-log-in"></span> Login with Mendeley</a></li>
+          <% end %>
         </ul>
       </div>
     </nav>
