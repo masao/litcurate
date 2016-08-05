@@ -38,4 +38,9 @@ class App < Sinatra::Base
   end
 
   helpers ERB::Util
+  helpers do
+    def login?
+      session.has_key? :uid
+    end
+  end
 end
