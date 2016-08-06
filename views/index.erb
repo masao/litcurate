@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <style type="text/css"> 
-      body { padding-top: 70px; } 
+    <style type="text/css">
+      body { padding-top: 70px; }
     </style>
   </head>
   <body>
@@ -34,15 +34,47 @@
         </ul>
       </div>
     </nav>
+    <% if login? %>
     <div class="container-fluid">
-      <div class="row">
-        <div class="form-group">
-          <label for="folders">Folder</label>
-          <select class="form-control" id="folders">
-            <option>[select target folder]</option>
-          </select>
+      <div class="content">
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="form-group">
+              <label for="folders">Folder</label>
+              <select class="form-control" id="folders">
+                <option>[select target folder]</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Documents</p>
+            <ul id="documents" class="list-unstyled">
+              <li class="btn btn-default btn-sm">Saito,2012</li>
+              <li class="btn btn-default btn-sm">White,2009</li>
+              <li class="btn btn-default btn-sm">Kelly,2012<li>
+              <li class="btn btn-default btn-sm">Kando,2000</li>
+              <li class="btn btn-default btn-sm">Marchionini,2006</li>
+              <li class="btn btn-default btn-sm">Sakai,2016</li>
+              <li class="btn btn-default btn-sm">Vakkari,2015</li>
+              <li class="btn btn-default btn-sm">Liu,2016</li>
+              <li class="btn btn-default btn-sm">Song,2016</li>
+            </ul>
+          </div>
+          <div class="col-sm-10">
+            <p>Annotations</p>
+            <p>
+              <a href="/news_axis">New...</a>
+            </p>
+            <ul id="axis" class="list-unstyled">
+              <li class="btn btn-default">methodology</li>
+              <li class="btn btn-default">genre</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
+    <% end %>
   </body>
 </html>
