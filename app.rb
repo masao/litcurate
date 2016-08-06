@@ -20,6 +20,10 @@ class App < Sinatra::Base
   end
 
   get "/" do
+    if login?
+      @mendeley = Mendeley.new(session[:access_token])
+      @folders = @mendeley.get("/folders")
+    end
     erb :index
   end
 
