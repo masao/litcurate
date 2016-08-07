@@ -1,6 +1,7 @@
 # spec/spec_helper.rb
 require 'rack/test'
 require 'rspec'
+require 'support/factory_girl'
 
 ENV['RACK_ENV'] = 'test'
 

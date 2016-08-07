@@ -1,9 +1,11 @@
 require "erb"
 require "sinatra"
+require "sinatra/activerecord"
 require "omniauth"
 require "omniauth-mendeley_oauth2"
 
 require_relative "mendeley.rb"
+require_relative "models.rb"
 
 # Workaround for omniauth-oauth2 changes...
 # cf. https://github.com/intridea/omniauth-oauth2/pull/82
@@ -18,6 +20,8 @@ class App < Sinatra::Base
   use OmniAuth::Builder do
     provider :mendeley, ENV['MENDELEY_CLIENT_ID'], ENV['MENDELEY_CLIENT_SECRET']
   end
+  register Sinatra::ActiveRecordExtension
+  #set :database, {adapter: "sqlite3", database: "development.sqlite3"}
 
   get "/" do
     if login?

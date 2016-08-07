@@ -2,12 +2,15 @@ source 'https://rubygems.org'
 gem "json"
 gem "sinatra"
 gem "sinatra-contrib"
+gem "sinatra-activerecord"
+gem "pg"
+gem "sqlite3"
 gem "omniauth"
 gem "omniauth-mendeley_oauth2"
 gem "puma"
 gem "foreman"
+gem "rake"
 
-group :test do
-  gem "rspec"
-  gem "rack-test"
-end
+gem "rspec"
+gem "rack-test"
+gem "factory_girl"
