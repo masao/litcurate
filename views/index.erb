@@ -7,6 +7,9 @@
             <label for="folders">Folder</label>
             <select class="form-control" id="folders">
               <option>[select target folder]</option>
+              <% @folders.try(:each) do |folder| %>
+              <option value="<%=h folder["id"] %>"><%=h folder["name"] %></option>
+              <% end %>
             </select>
           </div>
         </div>

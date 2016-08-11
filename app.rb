@@ -25,8 +25,12 @@ class App < Sinatra::Base
 
   get "/" do
     if login?
-      @mendeley = Mendeley.new(session[:access_token])
-      @folders = @mendeley.get("/folders")
+      begin 
+        @mendeley = Mendeley.new(session[:access_token])
+        @folders = @mendeley.get("/folders")
+      rescue Mendeley::Error => e
+        redirect to "/auth/mendeley"
+      end
     end
     erb :index
   end
@@ -43,6 +47,10 @@ class App < Sinatra::Base
     erb "<a href='/'>Top</a><br>
       <h1>#{params[:provider]}</h1>
       <pre>#{JSON.pretty_generate(result)}</pre>"
+  end
+  get "/logout" do
+    session.clear
+    redirect to "/"
   end
 
   helpers ERB::Util
