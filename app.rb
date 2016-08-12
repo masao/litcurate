@@ -1,6 +1,7 @@
 require "erb"
 require "sinatra"
 require "sinatra/activerecord"
+require "sinatra/json"
 require "omniauth"
 require "omniauth-mendeley_oauth2"
 
@@ -29,10 +30,18 @@ class App < Sinatra::Base
         @mendeley = Mendeley.new(session[:access_token])
         @folders = @mendeley.get("/folders")
       rescue Mendeley::Error => e
-        redirect to "/auth/mendeley"
+        redirect to "/logout"
       end
     end
     erb :index
+  end
+
+  get "/load_documents" do
+    content_type "text/json"
+    @mendeley = Mendeley.new(session[:access_token])
+    path = File.join("folders", params["folder"], "documents")
+    response = @mendeley.get(path)
+    json response
   end
 
   get "/auth/:provider/callback" do
