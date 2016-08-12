@@ -18,7 +18,7 @@ function load_documents(folder){
             console.log(data);
             var author = data["authors"][0]["last_name"];
             var year = data["year"];
-            $("#documents").append('<li class="btn btn-default btn-sm">'+author+", "+year+"</li>");
+            $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm">'+author+", "+year+"</li>");
           }
         });
       });
