@@ -53,6 +53,28 @@ class App < Sinatra::Base
     response = @mendeley.get(path)
     json response
   end
+  get "/load_annotations" do
+    content_type "text/json"
+    if not login?
+      status 403
+      return json(error: "You are not logged in. Please login first.")
+    end
+    if not params.has_key? "folder"
+      status 400
+      return json(error: "folder is not specified. Please specify the folder to process.")
+    end
+    annotations = Annotation.where(uid: session[:uid], folder: params["folder"])
+    result = []
+    annotations.each do |annotation|
+      result << {
+        id: annotation.id,
+        uid: annotation.uid,
+        folder: annotation.folder,
+        name: annotation.name,
+      }
+    end
+    json result
+  end
 
   get "/auth/:provider/callback" do
     result = request.env['omniauth.auth']

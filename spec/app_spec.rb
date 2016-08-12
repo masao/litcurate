@@ -11,4 +11,16 @@ describe App do
     get "/about"
     expect(last_response).to be_ok
   end
+
+  it "should load annotations" do
+    get "/load_annotations"
+    expect(last_response).not_to be_ok
+    annotation = FactoryGirl.create(:annotation)
+    env "rack.session", { uid: annotation.uid }
+    get "/load_annotations",{uid: annotation.uid, folder: annotation.folder}, {"rack.session": {session: {uid: annotation.uid}}}
+    expect(last_response).to be_ok
+    json = last_response.body
+    obj = JSON.load(json)
+    expect(obj).to respond_to(:each)
+  end
 end
