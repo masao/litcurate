@@ -35,6 +35,9 @@ class App < Sinatra::Base
     end
     erb :index
   end
+  get "/about" do
+    erb :about
+  end
 
   get "/load_documents" do
     content_type "text/json"
