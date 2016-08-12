@@ -6,4 +6,9 @@ describe App do
     expect(last_response).to be_ok
     expect(last_response.body).to match "Login"
   end
+
+  it "should have about page" do
+    get "/about"
+    expect(last_response).to be_ok
+  end
 end
