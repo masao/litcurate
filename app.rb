@@ -30,6 +30,9 @@ class App < Sinatra::Base
     end
     erb :index
   end
+  get "/about" do
+    erb :about
+  end
 
   get "/auth/:provider/callback" do
     result = request.env['omniauth.auth']
