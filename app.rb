@@ -46,6 +46,13 @@ class App < Sinatra::Base
     response = @mendeley.get(path)
     json response
   end
+  get "/load_document" do
+    content_type "text/json"
+    @mendeley = Mendeley.new(session[:access_token])
+    path = File.join("documents", params["id"])
+    response = @mendeley.get(path)
+    json response
+  end
 
   get "/auth/:provider/callback" do
     result = request.env['omniauth.auth']
@@ -69,6 +76,9 @@ class App < Sinatra::Base
   helpers do
     def login?
       session.has_key? :uid
+    end
+    def current_page?(path)
+      request.path_info == path
     end
   end
 end

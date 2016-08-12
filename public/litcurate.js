@@ -11,10 +11,18 @@ function load_documents(folder){
     success: function(data, status, params){
       $.each(data, function(index, val){
         console.log(val);
-        var author = val["authors"][0]["last_name"];
-        var year = val["year"];
-        $("#documents").append('<li class="btn btn-default btn-sm">'+author+", "+year+"</li>");
+        $.ajax({
+          url: "/load_document",
+          data: { id: val["id"] },
+          success: function(data, status, params){
+            console.log(data);
+            var author = data["authors"][0]["last_name"];
+            var year = data["year"];
+            $("#documents").append('<li class="btn btn-default btn-sm">'+author+", "+year+"</li>");
+          }
+        });
       });
+      $("span.loading-documents").empty();
     }
   });
 }
@@ -27,9 +35,7 @@ $(function(){
     var elem = $("#folders option:selected");
     var id = elem.val();
     var label = elem.text();
-    $("#documents").append('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>">');
+    $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
     load_documents(id);
-    //alert(id);
-    //alert(label);
   });
 });
