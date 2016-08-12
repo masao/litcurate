@@ -4,4 +4,6 @@ rvm:
   - jruby
   - rbx-2
 cache: bundler
-script: bundle exec rspec spec
+script:
+  - RACK_ENV=test bundle exec rake db:migrate
+  - bundle exec rspec spec
