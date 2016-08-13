@@ -19,8 +19,11 @@ describe App do
     env "rack.session", { uid: annotation.uid }
     get "/load_annotations", {folder: annotation.folder}
     expect(last_response).to be_ok
-    json = last_response.body
-    obj = JSON.load(json)
-    expect(obj).to respond_to(:each)
+    json = JSON.load(last_response.body)
+    expect(json).to respond_to(:each)
+    obj = json.last
+    expect(obj["uid"]).to eq annotation.uid
+    expect(obj["name"]).to eq annotation.name
+    expect(obj["folder"]).to eq annotation.folder
   end
 end
