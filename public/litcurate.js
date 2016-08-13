@@ -27,6 +27,19 @@ function load_documents(folder){
   });
 }
 
+function load_annotations(folder){
+  $.ajax({
+    url: "/load_annotations",
+    data: { folder: folder },
+    success: function(data, status, params){
+      console.log(data);
+      $.each(data, function(index, val){
+        $("#axis").append('<li id="'+val["id"]+'" class="btn btn-default btn-sm">'+val["name"]+"</li>");
+      });
+    }
+  });
+}
+
 $(function(){
   $("#folders").change(function(data){
     //alert("folder selected");
@@ -37,5 +50,6 @@ $(function(){
     var label = elem.text();
     $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
     load_documents(id);
+    load_annotations(id);
   });
 });
