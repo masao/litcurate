@@ -52,4 +52,39 @@ $(function(){
     load_documents(id);
     load_annotations(id);
   });
+  $("#new_annotation").click(function(e){
+    e.preventDefault();
+    bootbox.dialog({
+      title: "New annotation",
+      message: '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<form class="form-horizontal">'+
+        '<div class="form-group">'+
+        '<label class="col-md-4 control-label" for="name">Name</label>'+
+        '<div class="col-md-4">'+
+        '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
+        '</div>'+
+        '</div>'+
+        '<div class="form-group">'+
+        '<label class="col-md-4 control-label" for="items">Items</label>'+
+        '<div class="col-md-4">'+
+        '<input id="name-1" name="name-1" type="text" placeholder="Item 1" class="form-control input-md"/>'+
+        '<input id="name-2" name="name-2" type="text" placeholder="Item 2" class="form-control input-md"/>'+
+        '</div>'+
+        '</div>'+
+        '</form>'+
+        '</div>'+
+        '</div>',
+      buttons: {
+        success: {
+          label: "Save",
+          className: "btn-success",
+          callback: function(){
+            var name = $("#name").val();
+            alert("Name: "+name+" saved.");
+          }
+        }
+      }
+    });
+  });
 });
