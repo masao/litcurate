@@ -39,4 +39,21 @@ describe App do
       expect(obj).to have_key("error")
     end
   end
+
+  context "/new_annotation" do
+    it "should accept POST parameters" do
+      get "/new_annotation"
+      expect(last_response).not_to be_ok
+      post "/new_annotation"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 403
+
+      number_of_annotations = Annotation.all.size
+      env "rack.session", { uid: "dummy-uid" }
+      dummy_params = {folder: "dummy", name: "name", "item-1": "item-1", "item-2": "item-2"}
+      post "/new_annotation", dummy_params
+      expect(last_response).to be_ok
+      expect(Annotation.all.size).to eq number_of_annotations+1
+    end
+  end
 end

@@ -41,6 +41,8 @@ class App < Sinatra::Base
 
   get "/load_documents" do
     content_type "text/json"
+    authorize!
+    check_param!("folder")
     @mendeley = Mendeley.new(session[:access_token])
     path = File.join("folders", params["folder"], "documents")
     response = @mendeley.get(path)
@@ -48,6 +50,8 @@ class App < Sinatra::Base
   end
   get "/load_document" do
     content_type "text/json"
+    authorize!
+    check_param!("id")
     @mendeley = Mendeley.new(session[:access_token])
     path = File.join("documents", params["id"])
     response = @mendeley.get(path)
@@ -55,14 +59,8 @@ class App < Sinatra::Base
   end
   get "/load_annotations" do
     content_type "text/json"
-    if not login?
-      status 403
-      return json(error: "You are not logged in. Please login first.")
-    end
-    if not params.has_key? "folder"
-      status 400
-      return json(error: "folder is not specified. Please specify the folder to process.")
-    end
+    authorize!
+    check_param!("folder")
     annotations = Annotation.where(uid: session[:uid], folder: params["folder"])
     result = []
     annotations.each do |annotation|
@@ -74,6 +72,19 @@ class App < Sinatra::Base
       }
     end
     json result
+  end
+
+  post "/new_annotation" do
+    content_type "text/json"
+    authorize!
+    check_param!("folder", "name", "item-1")
+    annotation = Annotation.create(uid: session[:uid], folder: params["folder"], name: params["name"])
+    params.keys.select{|e| e =~ /\Aitem-\d+\z/ }.sort.each do |e|
+      item = Item.create(annotation: annotation, name: params[e])
+      annotation.items << item
+    end
+    p annotation
+    p annotation.items
   end
 
   get "/auth/:provider/callback" do
@@ -96,6 +107,18 @@ class App < Sinatra::Base
 
   helpers ERB::Util
   helpers do
+    def authorize!
+      if not login?
+        halt 403, json(error: "You are not logged in. Please login first.")
+      end
+    end
+    def check_param!(*parameters)
+      parameters.each do |param|
+        if not params.has_key? param
+          halt 400, json(error: "#{param} is not specified. Please specify the parameter '#{param}' to proceed.")
+        end
+      end
+    end
     def login?
       session.has_key? :uid
     end
