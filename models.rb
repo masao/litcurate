@@ -8,6 +8,5 @@ end
 class Item < ActiveRecord::Base
   belongs_to :annotation
   validates_presence_of :name
-  validates_presence_of :position
   validates_associated :annotation
 end

@@ -34,8 +34,62 @@ function load_annotations(folder){
     success: function(data, status, params){
       console.log(data);
       $.each(data, function(index, val){
-        $("#axis").append('<li id="'+val["id"]+'" class="btn btn-default btn-sm">'+val["name"]+"</li>");
+        $("#axis").append('<li id="annotation-'+val["id"]+'" class="btn btn-default btn-sm">'+val["name"]+"</li>");
       });
+    }
+  });
+}
+
+function new_annotation(){
+  var folder = $("#folders option:selected").val();
+  bootbox.dialog({
+    title: "New annotation",
+    message: '<div class="row">'+
+      '<div class="col-md-12">'+
+      '<form class="form-horizontal">'+
+      '<input type="hidden" name="folder" id="folder" value="'+folder+'"/>'+
+      '<div class="form-group">'+
+      '<label class="col-md-4 control-label" for="name">Name</label>'+
+      '<div class="col-md-4">'+
+      '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
+      '</div>'+
+      '</div>'+
+      '<div class="form-group">'+
+      '<label class="col-md-4 control-label" for="items">Items</label>'+
+      '<div class="col-md-4">'+
+      '<input id="item-1" name="item-1" type="text" placeholder="Item 1" class="form-control input-md"/>'+
+      '<input id="item-2" name="item-2" type="text" placeholder="Item 2" class="form-control input-md"/>'+
+      '</div>'+
+      '</div>'+
+      '</form>'+
+      '</div>'+
+      '</div>',
+    buttons: {
+      success: {
+        label: "Save",
+        className: "btn-success",
+        callback: function(){
+          var name = $("#name").val();
+          var folder = $("#folder").val();
+          var items = [];
+          for (var i = 1; i <= 10; i++) {
+            var item = $("#item-"+i).val();
+            if (!item) break;
+            items.push(item);
+          }
+          console.log(name);
+          console.log(folder);
+          console.log(items);
+          $.ajax({
+            url: "/new_annotation",
+            data: { name: name, folder: folder, item: items },
+            method: "POST",
+            success: function(){
+              load_annotations();
+            }
+          });
+        }
+      }
     }
   });
 }
@@ -54,37 +108,6 @@ $(function(){
   });
   $("#new_annotation").click(function(e){
     e.preventDefault();
-    bootbox.dialog({
-      title: "New annotation",
-      message: '<div class="row">'+
-        '<div class="col-md-12">'+
-        '<form class="form-horizontal">'+
-        '<div class="form-group">'+
-        '<label class="col-md-4 control-label" for="name">Name</label>'+
-        '<div class="col-md-4">'+
-        '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
-        '</div>'+
-        '</div>'+
-        '<div class="form-group">'+
-        '<label class="col-md-4 control-label" for="items">Items</label>'+
-        '<div class="col-md-4">'+
-        '<input id="name-1" name="name-1" type="text" placeholder="Item 1" class="form-control input-md"/>'+
-        '<input id="name-2" name="name-2" type="text" placeholder="Item 2" class="form-control input-md"/>'+
-        '</div>'+
-        '</div>'+
-        '</form>'+
-        '</div>'+
-        '</div>',
-      buttons: {
-        success: {
-          label: "Save",
-          className: "btn-success",
-          callback: function(){
-            var name = $("#name").val();
-            alert("Name: "+name+" saved.");
-          }
-        }
-      }
-    });
+    new_annotation();
   });
 });

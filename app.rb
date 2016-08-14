@@ -77,14 +77,15 @@ class App < Sinatra::Base
   post "/new_annotation" do
     content_type "text/json"
     authorize!
-    check_param!("folder", "name", "item-1")
-    annotation = Annotation.create(uid: session[:uid], folder: params["folder"], name: params["name"])
-    params.keys.select{|e| e =~ /\Aitem-\d+\z/ }.sort.each do |e|
-      item = Item.create(annotation: annotation, name: params[e])
+    check_param!("folder", "name", "item")
+    annotation = Annotation.create(uid: session[:uid], folder: params[:folder], name: params["name"])
+    params[:item].each do |e|
+      item = Item.create(annotation: annotation, name: e)
+      item.save!
       annotation.items << item
+      annotation.save!
     end
-    p annotation
-    p annotation.items
+    json annotation
   end
 
   get "/auth/:provider/callback" do
