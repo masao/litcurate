@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 20160807142118) do
 
   create_table "items", force: :cascade do |t|
     t.string  "name"
-    t.integer "position"
     t.integer "annotation_id"
   end
 

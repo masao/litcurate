@@ -50,7 +50,7 @@ describe App do
 
       number_of_annotations = Annotation.all.size
       env "rack.session", { uid: "dummy-uid" }
-      dummy_params = {folder: "dummy", name: "name", "item-1": "item-1", "item-2": "item-2"}
+      dummy_params = {folder: "dummy", name: "name", "item": ["item-1", "item-2"]}
       post "/new_annotation", dummy_params
       expect(last_response).to be_ok
       expect(Annotation.all.size).to eq number_of_annotations+1
