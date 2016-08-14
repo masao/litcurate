@@ -14,9 +14,6 @@ FactoryGirl.define do
     sequence :name do |i|
       "item_#{i}"
     end
-    sequence :position do |i|
-      i
-    end
     association :annotation, factory: :annotation
   end
 end
