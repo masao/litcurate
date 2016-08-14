@@ -34,7 +34,7 @@ function load_annotations(folder){
     success: function(data, status, params){
       console.log(data);
       $.each(data, function(index, val){
-        $("#axis").append('<li id="annotation-'+val["id"]+'" class="btn btn-default btn-sm">'+val["name"]+"</li>");
+        $("#axis").append('<li id="annotation-'+val["id"]+'" class="annotation btn btn-default">'+val["name"]+"</li>");
       });
     }
   });
@@ -85,13 +85,19 @@ function new_annotation(){
             data: { name: name, folder: folder, item: items },
             method: "POST",
             success: function(){
-              load_annotations();
+              load_annotations(folder);
             }
           });
         }
       }
     }
   });
+}
+
+function load_annotation(annotation){
+  var annotation_id = annotation.id;
+  $("#axis .annotation.btn-primary").removeClass("btn-primary");
+  $(annotation).addClass("btn-primary");
 }
 
 $(function(){
@@ -109,5 +115,10 @@ $(function(){
   $("#new_annotation").click(function(e){
     e.preventDefault();
     new_annotation();
+  });
+  $("#axis").on("click", ".annotation", function(e){
+    console.log(e);
+    console.log(e.target);
+    load_annotation(e.target);
   });
 });
