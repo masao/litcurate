@@ -95,16 +95,22 @@ function new_annotation(){
 }
 
 function load_annotation(annotation){
-  var annotation_id = annotation.id;
   $("#axis .annotation.btn-primary").removeClass("btn-primary");
   $(annotation).addClass("btn-primary");
+  var annotation_id = annotation.id.replace(/^annotation-/, "");
+  $.ajax({
+    url: "/load_items",
+    data: { annotation: annotation_id },
+    success: function(){
+      
+    }
+  });
 }
 
 $(function(){
   $("#folders").change(function(data){
-    //alert("folder selected");
     reset_all();
-    console.log(data);
+    //console.log(data);
     var elem = $("#folders option:selected");
     var id = elem.val();
     var label = elem.text();
@@ -117,8 +123,8 @@ $(function(){
     new_annotation();
   });
   $("#axis").on("click", ".annotation", function(e){
-    console.log(e);
-    console.log(e.target);
+    //console.log(e);
+    //console.log(e.target);
     load_annotation(e.target);
   });
 });
