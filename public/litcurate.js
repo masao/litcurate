@@ -64,6 +64,8 @@ function new_annotation(){
       '</form>'+
       '</div>'+
       '</div>',
+    onEscape: true,
+    backdrop: true,
     buttons: {
       success: {
         label: "Save",
