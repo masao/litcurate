@@ -22,7 +22,8 @@ function load_documents(folder){
             console.log(data);
             var author = data["authors"][0]["last_name"];
             var year = data["year"];
-            $("#documents").append('<li draggable="true" ondragstart="drag(event)" id="'+data["id"]+'" class="btn btn-default btn-sm">'+author+", "+year+"</li>");
+            $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm document">'+author+", "+year+"</li>");
+            $("#"+data["id"]).draggable();
           }
         });
       });
@@ -107,8 +108,15 @@ function load_annotation(annotation){
   $.ajax({
     url: "/load_items",
     data: { annotation: annotation_id },
-    success: function(){
-      
+    success: function(data){
+      $("#annotation").empty();
+      var row = row_cell = $("<tr/>");
+      $.each(data, function(index, val){
+        row.append('<th>'+val+'<th>');
+        row_cell.append('<td class="item"><div class="item-cell"></div></td>');
+      });
+      $("#annotation").append(row);
+      $("#annotation").append(row_cell);
     }
   });
 }

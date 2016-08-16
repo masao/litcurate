@@ -40,6 +40,31 @@ describe App do
     end
   end
 
+  context "/load_items" do
+    it "should load items" do
+      item = FactoryGirl.create(:item)
+      env "rack.session", { uid: item.annotation.uid }
+      get "/load_items", annotation: item.annotation.id
+      expect(last_response).to be_ok
+      obj = JSON.load(last_response.body)
+      expect(obj).not_to be_blank
+      expect(obj.first["name"]).to eq item.name
+    end
+    it "should raise errors with missing parameters" do
+      get "/load_items"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 403
+      obj = JSON.load(last_response.body)
+      expect(obj).to have_key("error")
+      env "rack.session", { uid: "dummy" }
+      get "/load_items"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 400
+      obj = JSON.load(last_response.body)
+      expect(obj).to have_key("error")
+    end
+  end
+
   context "/new_annotation" do
     it "should accept POST parameters" do
       get "/new_annotation"

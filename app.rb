@@ -73,6 +73,16 @@ class App < Sinatra::Base
     end
     json result
   end
+  get "/load_items" do
+    content_type "text/json"
+    authorize!
+    check_param!("annotation")
+    annotation = Annotation.find params[:annotation]
+    if annotation.blank? or annotation.uid != session[:uid]
+      halt 400, json(error: "annotation '#{params[:annotation]}' is not found.")
+    end
+    json annotation.items
+  end
 
   post "/new_annotation" do
     content_type "text/json"
