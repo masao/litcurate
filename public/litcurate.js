@@ -4,6 +4,10 @@ function reset_all(){
   $("#annotations").empty();
 }
 
+function drag(event){
+  console.log(event);
+}
+
 function load_documents(folder){
   $.ajax({
     url: "/load_documents",
@@ -18,7 +22,7 @@ function load_documents(folder){
             console.log(data);
             var author = data["authors"][0]["last_name"];
             var year = data["year"];
-            $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm">'+author+", "+year+"</li>");
+            $("#documents").append('<li draggable="true" ondragstart="drag(event)" id="'+data["id"]+'" class="btn btn-default btn-sm">'+author+", "+year+"</li>");
           }
         });
       });
