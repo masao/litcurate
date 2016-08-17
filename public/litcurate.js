@@ -23,7 +23,9 @@ function load_documents(folder){
             var author = data["authors"][0]["last_name"];
             var year = data["year"];
             $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm document">'+author+", "+year+"</li>");
-            $("#"+data["id"]).draggable();
+            $("#"+data["id"]).draggable({
+              revert: "invalid"
+            });
           }
         });
       });
@@ -109,14 +111,22 @@ function load_annotation(annotation){
     url: "/load_items",
     data: { annotation: annotation_id },
     success: function(data){
-      $("#annotation").empty();
-      var row = row_cell = $("<tr/>");
+      console.log(data);
+      $("#annotations").empty();
+      var row = $("<tr/>");
+      var row_cell = $("<tr/>");
       $.each(data, function(index, val){
-        row.append('<th>'+val+'<th>');
+        row.append('<th>'+val.name+'</th>');
         row_cell.append('<td class="item"><div class="item-cell"></div></td>');
       });
-      $("#annotation").append(row);
-      $("#annotation").append(row_cell);
+      $("#annotations").append(row);
+      $("#annotations").append(row_cell);
+      $(".item-cell").droppable({
+        accept: "#documents .document",
+        drop: function(event, ui){
+          console.log(event);
+        }
+      });
     }
   });
 }
