@@ -13,9 +13,10 @@ function load_documents(folder){
     url: "/load_documents",
     data: { folder: folder },
     success: function(data, status, params){
+      var ajax_calls = [];
       $.each(data, function(index, val){
         console.log(val);
-        $.ajax({
+        ajax_calls.push($.ajax({
           url: "/load_document",
           data: { id: val["id"] },
           success: function(data, status, params){
@@ -27,9 +28,11 @@ function load_documents(folder){
               revert: "invalid"
             });
           }
-        });
+        }));
       });
-      $("span.loading-documents").empty();
+      $.when.apply($, ajax_calls).always(function(){
+        $("span.loading-documents").fadeOut();
+      });
     }
   });
 }
@@ -132,12 +135,13 @@ function load_annotation(annotation){
 }
 
 $(function(){
-  $("#folders").change(function(data){
-    reset_all();
-    //console.log(data);
+  $("#folders").change(function(e){
     var elem = $("#folders option:selected");
     var id = elem.val();
     var label = elem.text();
+    if (!id) return;
+    reset_all();
+    //console.log(data);
     $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
     load_documents(id);
     load_annotations(id);
