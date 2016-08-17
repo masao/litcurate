@@ -4,9 +4,9 @@
       <div class="row">
         <div class="col-sm-9">
           <div class="form-group">
-            <label for="folders">Folder</label>
+            <label for="folders"><%= t("folders.label") %></label>
             <select class="form-control" id="folders">
-              <option>[select target folder]</option>
+              <option value=""><%= t("folders.select") %></option>
               <% @folders.try(:each) do |folder| %>
               <option value="<%=h folder["id"] %>"><%=h folder["name"] %></option>
               <% end %>
@@ -16,7 +16,7 @@
       </div>
       <div class="row">
         <div class="col-sm-2">
-          <p>Documents</p>
+          <p><%= t(:documents) %></p>
           <ul id="documents" class="list-unstyled">
             <li class="btn btn-default btn-sm">Saito,2012</li>
             <li class="btn btn-default btn-sm">White,2009</li>
@@ -30,7 +30,7 @@
           </ul>
         </div>
         <div class="col-sm-10">
-          <p>Annotations</p>
+          <p><%= t(:annotations) %></p>
           <p>
             <a href="/news_axis" id="new_annotation">New...</a>
           </p>

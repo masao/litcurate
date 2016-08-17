@@ -1,0 +1,8 @@
+en:
+  annotations: Annotations
+  documents: Documents
+  folders:
+    label: Folders
+    select: "Select target folders:"
+  login: Login with Mendeley
+  logout: Logout

@@ -1,0 +1,8 @@
+ja:
+  annotations: 分類
+  documents: 文献一覧
+  folders:
+    label: フォルダ
+    select: 対象フォルダを選んでください
+  login: Mendeleyログイン
+  logout: ログアウト

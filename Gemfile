@@ -10,6 +10,8 @@ gem "omniauth-mendeley_oauth2"
 gem "puma"
 gem "foreman"
 gem "rake"
+gem "rack-contrib"
+gem "i18n"
 
 gem "rspec"
 gem "rack-test"

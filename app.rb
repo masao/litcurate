@@ -4,6 +4,10 @@ require "sinatra/activerecord"
 require "sinatra/json"
 require "omniauth"
 require "omniauth-mendeley_oauth2"
+require "rack"
+require "rack/contrib"
+require "i18n"
+require "i18n/backend/fallbacks"
 
 require_relative "mendeley.rb"
 require_relative "models.rb"
@@ -23,6 +27,13 @@ class App < Sinatra::Base
   end
   register Sinatra::ActiveRecordExtension
   #set :database, {adapter: "sqlite3", database: "development.sqlite3"}
+
+  configure do
+    I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
+    I18n.load_path = Dir[File.join(settings.root, 'locales', '*.yml')]
+    I18n.backend.load_translations
+  end
+  use Rack::Locale
 
   get "/" do
     if login?
@@ -135,6 +146,9 @@ class App < Sinatra::Base
     end
     def current_page?(path)
       request.path_info == path
+    end
+    def t(*arg)
+      I18n.t(*arg)
     end
   end
 end
