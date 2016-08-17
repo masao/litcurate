@@ -10,6 +10,12 @@ function reset_all(){
   $("#annotations").empty();
 }
 
+function prepare_draggable(elem){
+  $(elem).draggable({
+    revert: "invalid"
+  });
+}
+
 function load_documents(folder){
   $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
   $.ajax({
@@ -27,9 +33,7 @@ function load_documents(folder){
             var author = data["authors"][0]["last_name"];
             var year = data["year"];
             $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm document">'+author+", "+year+"</li>");
-            $("#"+data["id"]).draggable({
-              revert: "invalid"
-            });
+            prepare_draggable("#"+data["id"]);
           }
         }));
       });
@@ -130,14 +134,19 @@ function load_annotation(annotation){
       var row_cell = $("<tr/>");
       $.each(data, function(index, val){
         row.append('<th>'+val.name+'</th>');
-        row_cell.append('<td class="item"><div class="item-cell"></div></td>');
+        row_cell.append('<td class="item"><ul class="list-unstyled item-cell"></ul></td>');
       });
       $("#annotations").append(row);
       $("#annotations").append(row_cell);
       $(".item-cell").droppable({
-        accept: "#documents .document",
+        accept: "#documents .document, #annotations .item-cell .document",
         drop: function(event, ui){
-          console.log(event);
+          $(ui.draggable).css({
+            position: "static",
+            left: 0,
+            top: 0
+          }).appendTo(this);
+          prepare_draggable(ui.draggable);
         }
       });
     }
