@@ -29,7 +29,7 @@ class App < Sinatra::Base
       begin 
         @mendeley = Mendeley.new(session[:access_token])
         @folders = @mendeley.get("/folders")
-      rescue Mendeley::Error => e
+      rescue Mendeley::Error
         redirect to "/logout"
       end
     end
