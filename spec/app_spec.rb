@@ -12,6 +12,20 @@ describe App do
     expect(last_response).to be_ok
   end
 
+  it "should have i18n feature" do
+    get "/"
+    expect(last_response).to be_ok
+    expect(last_response.body).to match /Login/
+    env "HTTP_ACCEPT_LANGUAGE", "ja"
+    get "/"
+    expect(last_response).to be_ok
+    expect(last_response.body).to match /ログイン/
+    env "HTTP_ACCEPT_LANGUAGE", "ja-JP"
+    get "/"
+    expect(last_response).to be_ok
+    expect(last_response.body).to match /ログイン/
+  end
+
   context "/load_annotations" do
     it "should load annotations" do
       annotation = FactoryGirl.create(:annotation)
