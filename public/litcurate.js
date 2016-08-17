@@ -1,14 +1,17 @@
+function litcurate_alert(message){
+  var elem = $(".litcurate-alert");
+  elem.find("span").html(message);
+  elem.fadeIn().delay(4000).fadeOut();
+}
+
 function reset_all(){
   $("#documents").empty();
   $("#axis").empty();
   $("#annotations").empty();
 }
 
-function drag(event){
-  console.log(event);
-}
-
 function load_documents(folder){
+  $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
   $.ajax({
     url: "/load_documents",
     data: { folder: folder },
@@ -33,6 +36,13 @@ function load_documents(folder){
       $.when.apply($, ajax_calls).always(function(){
         $("span.loading-documents").fadeOut();
       });
+    },
+    error: function(data, statusText, errorThrown){
+      $("span.loading-documents").fadeOut();
+      console.log(data, statusText, errorThrown);
+      str = statusText;
+      if (errorThrown) str += ": " + errorThrown;
+      litcurate_alert(str);
     }
   });
 }
@@ -142,7 +152,6 @@ $(function(){
     if (!id) return;
     reset_all();
     //console.log(data);
-    $("#documents").append('<span class="loading-documents"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></span>');
     load_documents(id);
     load_annotations(id);
   });
