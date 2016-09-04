@@ -152,6 +152,12 @@ function load_annotation(annotation){
     }
   });
 }
+function unload_annotation(annotation){
+  $(annotation).removeClass("btn-primary");
+  var annotation_id = annotation.id.replace(/^annotation-/, "");
+  $(".item li").appendTo("#documents");
+  $("#annotations").empty();
+}
 
 $(function(){
   $("#folders").change(function(e){
@@ -171,6 +177,10 @@ $(function(){
   $("#axis").on("click", ".annotation", function(e){
     //console.log(e);
     //console.log(e.target);
-    load_annotation(e.target);
+    if ($(e.target).hasClass("btn-primary")) {
+      unload_annotation(e.target);
+    } else {
+      load_annotation(e.target);
+    }
   });
 });
