@@ -67,6 +67,7 @@ class App < Sinatra::Base
     check_param!("id")
     @mendeley = Mendeley.new(session[:access_token])
     path = File.join("documents", params["id"])
+    path << "?view=all"
     response = @mendeley.get(path)
     json response
   end
