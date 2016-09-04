@@ -1,13 +1,21 @@
+function reset_all(){
+  $("#documents").empty();
+  $("#axis").empty();
+  $("#annotations").empty();
+}
+
 function litcurate_alert(message){
   var elem = $(".litcurate-alert");
   elem.find("span").html(message);
   elem.fadeIn().delay(4000).fadeOut();
 }
 
-function reset_all(){
-  $("#documents").empty();
-  $("#axis").empty();
-  $("#annotations").empty();
+function error_report(data, statusText, errorThrown){
+  $("span.loading-documents").fadeOut();
+  console.log(data, statusText, errorThrown);
+  str = statusText;
+  if (errorThrown) str += ": " + errorThrown;
+  litcurate_alert(str);
 }
 
 function prepare_draggable(elem){
@@ -34,6 +42,7 @@ function load_documents(folder){
             var year = data["year"];
             $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm document">'+author+", "+year+"</li>");
             prepare_draggable("#"+data["id"]);
+            $("#"+data["id"]).data("metadata", data);
           }
         }));
       });
@@ -41,13 +50,7 @@ function load_documents(folder){
         $("span.loading-documents").fadeOut();
       });
     },
-    error: function(data, statusText, errorThrown){
-      $("span.loading-documents").fadeOut();
-      console.log(data, statusText, errorThrown);
-      str = statusText;
-      if (errorThrown) str += ": " + errorThrown;
-      litcurate_alert(str);
-    }
+    error: error_report
   });
 }
 
@@ -120,24 +123,41 @@ function new_annotation(){
   });
 }
 
+function update_document(document_id, annotation_name, item_name) {
+  console.log(document_id, annotation_name, item_name);
+  $.ajax({
+    url: "/update_document",
+    data: { id: document_id, annotation: annotation_name, item: item_name },
+    method: "POST",
+    //success: function(data) {
+    //},
+    error: error_report
+  });
+}
+
 function load_annotation(annotation){
   $("#axis .annotation.btn-primary").removeClass("btn-primary");
   $(annotation).addClass("btn-primary");
   var annotation_id = annotation.id.replace(/^annotation-/, "");
+  $("#annotations").data("name", $(annotation).text());
   $.ajax({
     url: "/load_items",
     data: { annotation: annotation_id },
     success: function(data){
-      console.log(data);
+      //console.log(data);
       $("#annotations").empty();
       var row = $("<tr/>");
       var row_cell = $("<tr/>");
+      var width = 100 / data.length;
       $.each(data, function(index, val){
-        row.append('<th>'+val.name+'</th>');
+        row.append('<th style="width:'+width+'%">'+val.name+'</th>');
         row_cell.append('<td class="item"><ul class="list-unstyled item-cell"></ul></td>');
       });
       $("#annotations").append(row);
       $("#annotations").append(row_cell);
+      $(".item-cell").each(function(index){
+        $(this).data("name", data[index].name);
+      });
       $(".item-cell").droppable({
         accept: "#documents .document, #annotations .item-cell .document",
         drop: function(event, ui){
@@ -147,14 +167,19 @@ function load_annotation(annotation){
             top: 0
           }).appendTo(this);
           prepare_draggable(ui.draggable);
+          update_document($(ui.draggable).data("metadata").id, $("#annotations").data("name"), $(this).data("name"));
+          //console.log($(ui.draggable).data("metadata"));
+          //console.log($(ui.draggable).data("metadata").id);
+          //console.log($(this).data("name"));
+          //console.log($("#annotations").data("name"));
         }
       });
     }
   });
 }
+
 function unload_annotation(annotation){
   $(annotation).removeClass("btn-primary");
-  var annotation_id = annotation.id.replace(/^annotation-/, "");
   $(".item li").appendTo("#documents");
   $("#annotations").empty();
 }
