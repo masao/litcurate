@@ -146,6 +146,9 @@ function update_document(document_id, annotation_name, item_name) {
 
 function load_annotation(annotation){
   $("#axis .annotation.btn-primary").removeClass("btn-primary");
+  $("#annotations li").each(function(){
+    $("#documents").append(this);
+  });
   $(annotation).addClass("btn-primary");
   var annotation_id = annotation.id.replace(/^annotation-/, "");
   var annotation_name = $(annotation).text();
