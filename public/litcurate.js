@@ -84,9 +84,9 @@ function new_annotation(){
       '</div>'+
       '<div class="form-group">'+
       '<label class="col-md-4 control-label" for="items">Items</label>'+
-      '<div class="col-md-4">'+
-      '<input id="item-1" name="item-1" type="text" placeholder="Item 1" class="form-control input-md"/>'+
-      '<input id="item-2" name="item-2" type="text" placeholder="Item 2" class="form-control input-md"/>'+
+      '<div id="items" class="col-md-4">'+
+      '<input name="items" type="text" placeholder="Item 1" class="form-control input-md item"/>'+
+      '<input name="items" type="text" placeholder="Item 2" class="form-control input-md item"/>'+
       '</div>'+
       '</div>'+
       '</form>'+
@@ -102,14 +102,13 @@ function new_annotation(){
           var name = $("#name").val();
           var folder = $("#folder").val();
           var items = [];
-          for (var i = 1; i <= 10; i++) {
-            var item = $("#item-"+i).val();
-            if (!item) break;
-            items.push(item);
-          }
-          console.log(name);
-          console.log(folder);
-          console.log(items);
+          $("#items .item").each(function(i, e){
+            var item = $(this).val();
+            if (item) {
+              items.push(item);
+            }
+          });
+          console.log("new_annotation", name, folder, items);
           $.ajax({
             url: "/new_annotation",
             data: { name: name, folder: folder, item: items },
