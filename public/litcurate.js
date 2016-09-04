@@ -59,6 +59,7 @@ function load_annotations(folder){
     url: "/load_annotations",
     data: { folder: folder },
     success: function(data, status, params){
+      $("#axis").empty();
       console.log(data);
       $.each(data, function(index, val){
         $("#axis").append('<li id="annotation-'+val["id"]+'" class="annotation btn btn-default">'+val["name"]+"</li>");
