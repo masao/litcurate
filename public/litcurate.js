@@ -209,11 +209,15 @@ $(function(){
     var elem = $("#folders option:selected");
     var id = elem.val();
     var label = elem.text();
-    if (!id) return;
-    reset_all();
-    //console.log(data);
-    load_documents(id);
-    load_annotations(id);
+    if (!id) {
+      $(".new-annotation").hide();
+      return;
+    } else {
+      reset_all();
+      load_documents(id);
+      load_annotations(id);
+      $(".new-annotation").show();
+    }
   });
   $("#new_annotation").click(function(e){
     e.preventDefault();
