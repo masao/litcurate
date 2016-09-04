@@ -52,6 +52,13 @@ class App < Sinatra::Base
     erb :about
   end
 
+  get "/load_folders" do
+    content_type "text/json"
+    authorize!
+    @mendeley = Mendeley.new(session[:access_token])
+    response = @mendeley.get("/folders")
+    json response
+  end
   get "/load_documents" do
     content_type "text/json"
     authorize!

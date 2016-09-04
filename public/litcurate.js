@@ -204,6 +204,22 @@ function unload_annotation(annotation){
   $("#annotations").empty();
 }
 
+function reload_folders(){
+  reset_all();
+  $("#folders option").each(function(){
+    if ($(this).val()) {
+      //console.log($(this).val());
+      $(this).remove();
+    }
+  });
+  $.get("/load_folders", function(data){
+    console.log("load_folders", data);
+    $.each(data, function(index, folder){
+      $("#folders").append('<option value="'+folder.id+'">'+folder.name+'</option');
+    });
+  });
+}
+
 $(function(){
   $("#folders").change(function(e){
     var elem = $("#folders option:selected");
@@ -211,13 +227,15 @@ $(function(){
     var label = elem.text();
     if (!id) {
       $(".new-annotation").hide();
-      return;
     } else {
       reset_all();
       load_documents(id);
       load_annotations(id);
       $(".new-annotation").show();
     }
+  });
+  $("#refresh-folders").click(function(e){
+    reload_folders();
   });
   $("#new_annotation").click(function(e){
     e.preventDefault();

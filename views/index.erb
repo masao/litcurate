@@ -5,12 +5,17 @@
         <div class="col-sm-9">
           <div class="form-group">
             <label for="folders"><%= t("folders.label") %></label>
-            <select class="form-control" id="folders">
-              <option value=""><%= t("folders.select") %></option>
-              <% @folders.try(:each) do |folder| %>
-              <option value="<%=h folder["id"] %>"><%=h folder["name"] %></option>
-              <% end %>
-            </select>
+            <div class="input-group">
+              <select class="form-control" id="folders">
+                <option value=""><%= t("folders.select") %></option>
+                <% @folders.try(:each) do |folder| %>
+                <option value="<%=h folder["id"] %>"><%=h folder["name"] %></option>
+                <% end %>
+              </select>
+              <span class="input-group-btn">
+                <button id="refresh-folders" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
