@@ -124,13 +124,21 @@ function new_annotation(){
 }
 
 function update_document(document_id, annotation_name, item_name) {
-  console.log(document_id, annotation_name, item_name);
+  console.log("update_document", document_id, annotation_name, item_name);
   $.ajax({
     url: "/update_document",
     data: { id: document_id, annotation: annotation_name, item: item_name },
     method: "POST",
-    //success: function(data) {
-    //},
+    success: function(data, status, params){
+      $.ajax({
+        url: "/load_document",
+        data: { id: document_id },
+        success: function(data, status, params){
+          console.log("update_document", data);
+          $("#"+data["id"]).data("metadata", data);
+        }
+      });
+    },
     error: error_report
   });
 }
@@ -139,7 +147,8 @@ function load_annotation(annotation){
   $("#axis .annotation.btn-primary").removeClass("btn-primary");
   $(annotation).addClass("btn-primary");
   var annotation_id = annotation.id.replace(/^annotation-/, "");
-  $("#annotations").data("name", $(annotation).text());
+  var annotation_name = $(annotation).text();
+  $("#annotations").data("name", annotation_name);
   $.ajax({
     url: "/load_items",
     data: { annotation: annotation_id },
@@ -157,6 +166,17 @@ function load_annotation(annotation){
       $("#annotations").append(row_cell);
       $(".item-cell").each(function(index){
         $(this).data("name", data[index].name);
+      });
+      $("#documents li.document").each(function(index, elem){
+        console.log($(elem).data("metadata").tags);
+        $.each($(elem).data("metadata").tags, function(index, val){
+          $(".item-cell").each(function(index_item, item_elem){
+            var item_name = annotation_name + "-" + data[index_item].name;
+            if (val == item_name) {
+              $(elem).appendTo(this);
+            }
+          });
+        });
       });
       $(".item-cell").droppable({
         accept: "#documents .document, #annotations .item-cell .document",
