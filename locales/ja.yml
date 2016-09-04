@@ -1,5 +1,7 @@
 ja:
-  annotations: 分類
+  annotations:
+    label: 分類
+    new: 新規作成
   documents: 文献一覧
   folders:
     label: フォルダ

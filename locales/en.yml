@@ -1,5 +1,7 @@
 en:
-  annotations: Annotations
+  annotations: 
+    label: Annotations
+    new: New...
   documents: Documents
   folders:
     label: Folders
