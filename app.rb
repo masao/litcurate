@@ -81,10 +81,10 @@ class App < Sinatra::Base
   post "/update_document" do
     content_type "text/json"
     authorize!
-    check_param!("id", "annotation", "item")
+    check_param!("id", "tags")
     @mendeley = Mendeley.new(session[:access_token])
     path = File.join("documents", params["id"])
-    body = { tags: [ "#{params["annotation"]}-#{params["item"]}" ] }.to_json
+    body = { tags: params["tags"] }.to_json
     response = @mendeley.patch(path, body)
     json response
   end

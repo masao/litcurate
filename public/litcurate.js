@@ -126,9 +126,17 @@ function new_annotation(){
 
 function update_document(document_id, annotation_name, item_name) {
   console.log("update_document", document_id, annotation_name, item_name);
+  var tags = [];
+  $.each($("#"+document_id).data("metadata").tags, function(i, e){
+    if (!e.startsWith(annotation_name+"-")) {
+      tags.push(e);
+    }
+  });
+  tags.push(annotation_name+"-"+item_name);
+  console.log(tags);
   $.ajax({
     url: "/update_document",
-    data: { id: document_id, annotation: annotation_name, item: item_name },
+    data: { id: document_id, tags: tags },
     method: "POST",
     success: function(data, status, params){
       $.ajax({
