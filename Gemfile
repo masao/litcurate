@@ -4,7 +4,6 @@ gem "sinatra"
 gem "sinatra-contrib"
 gem "sinatra-activerecord"
 gem "pg"
-gem "sqlite3"
 gem "omniauth"
 gem "omniauth-mendeley_oauth2"
 gem "puma"
@@ -13,6 +12,9 @@ gem "rake"
 gem "rack-contrib"
 gem "i18n"
 
-gem "rspec"
-gem "rack-test"
-gem "factory_girl"
+group :development, :test do
+  gem 'sqlite3'
+  gem "rspec"
+  gem "rack-test"
+  gem "factory_girl"
+end
