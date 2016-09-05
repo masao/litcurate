@@ -1,5 +1,11 @@
+table#annotations,
+table#annotations td,
+table#annotations th {
+  border: blue dashed 1px;
+  padding: 5px;
+}
 .item-cell {
-  height: 100px;
+  min-height: 150px;
   width: 100%;
 }
 
