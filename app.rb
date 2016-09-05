@@ -132,9 +132,10 @@ class App < Sinatra::Base
   post "/delete_annotation" do
     content_type "text/json"
     authorize!
-    check_param!("folder", "annotation")
-    annotation = Annotation.where(uid: session[:uid], folder: params[:folder], name: params[:annotation]).first
-    annotation.destroy
+    check_param!("annotation")
+    STDERR.puts params.inspect
+    annotation = Annotation.find(params[:annotation])
+    json annotation.destroy
   end
 
   get "/auth/:provider/callback" do

@@ -2,6 +2,8 @@ en:
   annotations: 
     label: Annotations
     new: New...
+    edit: Edit this annotation.
+    delete: Remove this annotation.
   documents: Documents
   folders:
     label: Folders

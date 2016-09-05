@@ -106,7 +106,7 @@ describe App do
 
       annotation = FactoryGirl.create(:annotation)
       env "rack.session", { uid: annotation.uid }
-      dummy_params = {annotation: annotation.name, folder: annotation.folder}
+      dummy_params = {annotation: annotation.id, folder: annotation.folder}
       post "/delete_annotation", dummy_params
       expect(last_response).to be_ok
     end

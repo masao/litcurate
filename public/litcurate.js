@@ -2,6 +2,7 @@ function reset_all(){
   $("#documents").empty();
   $("#axis").empty();
   $("#annotations").empty();
+  $("#annotation-panel").hide();
 }
 
 function litcurate_alert(message){
@@ -157,6 +158,7 @@ function load_annotation(annotation){
     $("#documents").append(this);
   });
   $(annotation).addClass("btn-primary");
+  $("#annotation-panel").show();
   var annotation_id = annotation.id.replace(/^annotation-/, "");
   var annotation_name = $(annotation).text();
   $("#annotations").data("name", annotation_name);
@@ -205,6 +207,7 @@ function load_annotation(annotation){
           //console.log($("#annotations").data("name"));
         }
       });
+      $("#annotation-panel").show();
     }
   });
 }
@@ -213,6 +216,7 @@ function unload_annotation(annotation){
   $(annotation).removeClass("btn-primary");
   $(".item li").appendTo("#documents");
   $("#annotations").empty();
+  $("#annotation-panel").hide();
 }
 
 function reload_folders(){
@@ -228,6 +232,14 @@ function reload_folders(){
     $.each(data, function(index, folder){
       $("#folders").append('<option value="'+folder.id+'">'+folder.name+'</option');
     });
+  });
+}
+
+function delete_annotation(annotation_id){
+  console.log("delete_annotation", annotation_id);
+  $.post("/delete_annotation", { annotation: annotation_id }, function(data, status, xhr){
+    unload_annotation();
+    load_annotations($("#folders option:selected").val());
   });
 }
 
@@ -252,9 +264,11 @@ $(function(){
     e.preventDefault();
     new_annotation();
   });
+  $("#annotation-delete").click(function(e){
+    var annotation_id = $("#axis li.btn-primary").attr("id").replace(/^annotation-/, "");
+    delete_annotation(annotation_id);
+  });
   $("#axis").on("click", ".annotation", function(e){
-    //console.log(e);
-    //console.log(e.target);
     if ($(e.target).hasClass("btn-primary")) {
       unload_annotation(e.target);
     } else {

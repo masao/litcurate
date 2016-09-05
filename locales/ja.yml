@@ -2,6 +2,8 @@ ja:
   annotations:
     label: 分類
     new: 新規作成
+    edit: この分類を編集する
+    delete: この分類を削除する
   documents: 文献一覧
   folders:
     label: フォルダ
