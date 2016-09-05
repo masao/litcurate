@@ -95,4 +95,20 @@ describe App do
       expect(Annotation.all.size).to eq number_of_annotations+1
     end
   end
+
+  context "/delete_annotation" do
+    it "should accept POST parameters" do
+      get "/delete_annotation"
+      expect(last_response).not_to be_ok
+      post "/delete_annotation"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 403
+
+      annotation = FactoryGirl.create(:annotation)
+      env "rack.session", { uid: annotation.uid }
+      dummy_params = {annotation: annotation.name, folder: annotation.folder}
+      post "/delete_annotation", dummy_params
+      expect(last_response).to be_ok
+    end
+  end
 end

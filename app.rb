@@ -129,6 +129,14 @@ class App < Sinatra::Base
     json annotation
   end
 
+  post "/delete_annotation" do
+    content_type "text/json"
+    authorize!
+    check_param!("folder", "annotation")
+    annotation = Annotation.where(uid: session[:uid], folder: params[:folder], name: params[:annotation]).first
+    annotation.destroy
+  end
+
   get "/auth/:provider/callback" do
     result = request.env['omniauth.auth']
     session[:uid] = result["uid"]
