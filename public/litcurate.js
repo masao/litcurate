@@ -61,7 +61,7 @@ function load_annotations(folder){
     data: { folder: folder },
     success: function(data, status, params){
       $("#axis").empty();
-      console.log(data);
+      console.log("load_annotations", data);
       $.each(data, function(index, val){
         $("#axis").append('<li id="annotation-'+val["id"]+'" class="annotation btn btn-default">'+val["name"]+"</li>");
       });
@@ -69,30 +69,45 @@ function load_annotations(folder){
   });
 }
 
+function annotation_form(data){
+  console.log("annotation_form", data);
+  var str = '';
+  str += '<div class="row"><div class="col-md-12"><form class="form-horizontal">'+
+   '<input type="hidden" name="folder" id="folder" value="'+data["folder"]+'"/>'+
+   '<div class="form-group">'+
+   '<label class="col-md-4 control-label" for="name">Name</label>'+
+   '<div class="col-md-6">'+
+   '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
+   '</div></div>'+
+   '<div class="form-group"><label class="col-md-4 control-label" for="items">Items</label>'+
+   '<div id="items" class="col-md-6">';
+  var count = 1;
+  $.each(data["items"], function(index, elem){
+    str += '<input name="items" type="text" placeholder="Item '+count+'" value="'+elem+'" class="form-control input-md item"/>';
+    count += 1;
+  });
+  str += '<input name="items" type="text" placeholder="Item '+count+'" class="form-control input-md item"/>';
+  str += '</div>';
+  str += '<p class="col-md-10 text-right"><a id="add_item_input">more items...</a></p>';
+  str += '</div></form></div></div>';
+  $("#items").data({count: count});
+  return str;
+}
+function add_item_input(){
+  var count = $("#items").data().count;
+  if(!count) count = 2;
+  console.log("add_item_input", count);
+  var str = '<input name="items" type="text" placeholder="Item '+count+'" class="form-control input-md item"/>';
+  $(str).appendTo("#items");
+  $("#items").data({count: count+1});
+}
+
 function new_annotation(){
-  var folder = $("#folders option:selected").val();
+  var form_data = {};
+  form_data["folder"] = $("#folders option:selected").val();
   bootbox.dialog({
     title: "New annotation",
-    message: '<div class="row">'+
-      '<div class="col-md-12">'+
-      '<form class="form-horizontal">'+
-      '<input type="hidden" name="folder" id="folder" value="'+folder+'"/>'+
-      '<div class="form-group">'+
-      '<label class="col-md-4 control-label" for="name">Name</label>'+
-      '<div class="col-md-4">'+
-      '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
-      '</div>'+
-      '</div>'+
-      '<div class="form-group">'+
-      '<label class="col-md-4 control-label" for="items">Items</label>'+
-      '<div id="items" class="col-md-4">'+
-      '<input name="items" type="text" placeholder="Item 1" class="form-control input-md item"/>'+
-      '<input name="items" type="text" placeholder="Item 2" class="form-control input-md item"/>'+
-      '</div>'+
-      '</div>'+
-      '</form>'+
-      '</div>'+
-      '</div>',
+    message: annotation_form(form_data),
     onEscape: true,
     backdrop: true,
     buttons: {
@@ -263,6 +278,10 @@ $(function(){
   $("#new_annotation").click(function(e){
     e.preventDefault();
     new_annotation();
+  });
+  $(document).on("click", "#add_item_input", function(e){
+    e.preventDefault();
+    add_item_input();
   });
   $("#annotation-delete").click(function(e){
     var annotation_id = $("#axis li.btn-primary").attr("id").replace(/^annotation-/, "");
