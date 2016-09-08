@@ -12,8 +12,7 @@ function litcurate_alert(message){
 }
 
 function error_report(data, statusText, errorThrown){
-  $("span.loading-documents").fadeOut();
-  console.log(data, statusText, errorThrown);
+  console.log("error_report", data, statusText, errorThrown);
   str = statusText;
   if (errorThrown) str += ": " + errorThrown;
   litcurate_alert(str);
@@ -73,11 +72,12 @@ function annotation_form(data){
   console.log("annotation_form", data);
   var str = '';
   str += '<div class="row"><div class="col-md-12"><form class="form-horizontal">'+
+   '<input type="hidden" name="id" id="id" value="'+data["id"]+'"/>'+
    '<input type="hidden" name="folder" id="folder" value="'+data["folder"]+'"/>'+
    '<div class="form-group">'+
    '<label class="col-md-4 control-label" for="name">Name</label>'+
    '<div class="col-md-6">'+
-   '<input id="name" name="name" type="text" placeholder="Name" class="form-control input-md"/>'+
+   '<input id="name" name="name" type="text" placeholder="Name" value="'+data["name"]+'" class="form-control input-md"/>'+
    '</div></div>'+
    '<div class="form-group"><label class="col-md-4 control-label" for="items">Items</label>'+
    '<div id="items" class="col-md-6">';
@@ -130,6 +130,51 @@ function new_annotation(){
             data: { name: name, folder: folder, item: items },
             method: "POST",
             success: function(){
+              load_annotations(folder);
+            }
+          });
+        }
+      }
+    }
+  });
+}
+function edit_annotation(annotation_id){
+  var items = [];
+  $(".item-cell").each(function(index){
+    items.push($(this).data("name"));
+  });
+  var form_data = {
+    id: annotation_id,
+    folder: $("#folders option:selected").val(),
+    name: $("#annotations").data("name"),
+    items: items
+  };
+  bootbox.dialog({
+    title: "Edit annotation",
+    message: annotation_form(form_data),
+    onEscape: true,
+    backdrop: true,
+    buttons: {
+      success: {
+        label: "Save",
+        className: "btn-success",
+        callback: function(){
+          var name = $("#name").val();
+          var folder = $("#folder").val();
+          var items = [];
+          $("#items .item").each(function(i, e){
+            var item = $(this).val();
+            if (item) {
+              items.push(item);
+            }
+          });
+          console.log("edit_annotation", annotation_id, name, folder, items);
+          $.ajax({
+            url: "/save_annotation",
+            data: { id: annotation_id, name: name, folder: folder, item: items },
+            method: "POST",
+            success: function(){
+              unload_annotation();
               load_annotations(folder);
             }
           });
@@ -286,6 +331,10 @@ $(function(){
   $("#annotation-delete").click(function(e){
     var annotation_id = $("#axis li.btn-primary").attr("id").replace(/^annotation-/, "");
     delete_annotation(annotation_id);
+  });
+  $("#annotation-edit").click(function(e){
+    var annotation_id = $("#axis li.btn-primary").attr("id").replace(/^annotation-/, "");
+    edit_annotation(annotation_id);
   });
   $("#axis").on("click", ".annotation", function(e){
     if ($(e.target).hasClass("btn-primary")) {

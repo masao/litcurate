@@ -128,12 +128,29 @@ class App < Sinatra::Base
     end
     json annotation
   end
+  post "/save_annotation" do
+    content_type "text/json"
+    authorize!
+    check_param!("id", "folder", "name", "item")
+    annotation = Annotation.find params[:id]
+    if not annotation
+      halt 404, "Id #{params[:id]} is not found."
+    end
+    annotation.items.destroy
+    annotation.items = []
+    params[:item].each do |e|
+      item = Item.create(annotation: annotation, name: e)
+      item.save!
+      annotation.items << item
+      annotation.save!
+    end
+    json annotation
+  end
 
   post "/delete_annotation" do
     content_type "text/json"
     authorize!
     check_param!("annotation")
-    STDERR.puts params.inspect
     annotation = Annotation.find(params[:annotation])
     json annotation.destroy
   end

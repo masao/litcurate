@@ -111,4 +111,31 @@ describe App do
       expect(last_response).to be_ok
     end
   end
+
+  context "/save_annotation" do
+    it "should accept POST parameters" do
+      annotation = FactoryGirl.create(:annotation)
+      env "rack.session", { uid: annotation.uid }
+      get "/save_annotation"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 404
+      post "/save_annotation"
+      expect(last_response).not_to be_ok
+      expect(last_response.status).to eq 400
+      post "/save_annotation", { id: annotation.id }
+      expect(last_response).not_to be_ok
+      post "/save_annotation", { id: annotation.id }
+      expect(last_response).not_to be_ok
+      post "/save_annotation", { id: annotation.id, name: "name" }
+      expect(last_response).not_to be_ok
+      post "/save_annotation", { id: annotation.id, name: "name", folder: annotation.folder }
+      expect(last_response).not_to be_ok
+      post "/save_annotation", { id: annotation.id, name: "name", folder: annotation.folder, item: ["item-1", "item-2"] }
+      expect(last_response).to be_ok
+      annotation.reload
+      expect(annotation.items.size).to eq 2
+      expect(annotation.items[0].name).to eq "item-1"
+      expect(annotation.items[1].name).to eq "item-2"
+    end
+  end
 end
