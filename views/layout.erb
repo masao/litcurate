@@ -25,7 +25,9 @@
         </div>
         <ul class="nav navbar-nav">
           <li class="<%= 'active' if current_page?('/') %>"><a href="/#">Home</a></li>
-          <li class="<%= 'active' if current_page?('/about') %>"><a href="/about">About</a></li>
+          <% if login? %>
+            <li class="<%= 'active' if current_page?('/about') %>"><a href="/about">About</a></li>
+          <% end %>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <% if login? %>

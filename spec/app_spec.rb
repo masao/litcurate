@@ -12,18 +12,27 @@ describe App do
     expect(last_response).to be_ok
   end
 
-  it "should have i18n feature" do
-    get "/"
-    expect(last_response).to be_ok
-    expect(last_response.body).to match /Login/
-    env "HTTP_ACCEPT_LANGUAGE", "ja"
-    get "/"
-    expect(last_response).to be_ok
-    expect(last_response.body).to match /ログイン/
-    env "HTTP_ACCEPT_LANGUAGE", "ja-JP"
-    get "/"
-    expect(last_response).to be_ok
-    expect(last_response.body).to match /ログイン/
+  context "I18n feature" do
+    it "should respect Accept header" do
+      get "/"
+      expect(last_response).to be_ok
+      expect(last_response.body).to match /Login/
+      env "HTTP_ACCEPT_LANGUAGE", "ja"
+      get "/"
+      expect(last_response).to be_ok
+      expect(last_response.body).to match /ログイン/
+      env "HTTP_ACCEPT_LANGUAGE", "ja-JP"
+      get "/"
+      expect(last_response).to be_ok
+      expect(last_response.body).to match /ログイン/
+    end
+    it "should switch page content" do
+      get "/about"
+      expect(last_response.body).to match /<strong>LitCurate<\/strong> is a tool/
+      env "HTTP_ACCEPT_LANGUAGE", "ja"
+      get "/about"
+      expect(last_response.body).to match /<strong>LitCurate<\/strong>は/
+    end
   end
 
   context "/load_annotations" do

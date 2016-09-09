@@ -1,6 +1,6 @@
-<% if login? %>
-  <div class="container-fluid">
-    <div class="content">
+<div class="container-fluid">
+  <div class="content">
+    <% if login? %>
       <div class="row">
         <div class="col-sm-9">
           <div class="form-group">
@@ -40,6 +40,13 @@
           </ul>
         </div>
       </div>
-    </div>
+    <% else %>
+      <div class="row">
+        <div class="col-sm-12">
+          <%= markdown "about.#{I18n.locale}".to_sym %>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
+

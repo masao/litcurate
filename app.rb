@@ -8,6 +8,7 @@ require "rack"
 require "rack/contrib"
 require "i18n"
 require "i18n/backend/fallbacks"
+require "rdiscount"
 
 require_relative "mendeley.rb"
 require_relative "models.rb"
@@ -36,6 +37,12 @@ class App < Sinatra::Base
     I18n.enforce_available_locales = false
   end
   use Rack::Locale
+
+  before do
+    if params[:locale]
+      I18n.locale = params[:locale]
+    end
+  end
 
   get "/" do
     if login?

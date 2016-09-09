@@ -11,6 +11,7 @@ gem "foreman"
 gem "rake"
 gem "rack-contrib"
 gem "i18n"
+gem "rdiscount"
 
 group :development, :test do
   gem 'sqlite3'
