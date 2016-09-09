@@ -1,3 +1,44 @@
+var LitCurate = {
+  style: 'apa',
+  citeproc_sys: {
+    retrieveLocale: function (lang){
+      var xhr = new XMLHttpRequest();
+      //xhr.open('GET', 'https://raw.githubusercontent.com/Juris-M/citeproc-js-docs/master/locales-' + lang + '.xml', false);
+      xhr.open('GET', 'https://raw.githubusercontent.com/citation-style-language/locales/master/locales-' + lang + '.xml', false);
+      xhr.send(null);
+      return xhr.responseText;
+    },
+    retrieveItem: function(id){
+      return $("#"+id).data().metadata;
+    }
+  },
+  get_processor: function(styleID) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://raw.githubusercontent.com/citation-style-language/styles/master/' + styleID + '.csl', false);
+    xhr.send(null);
+    var styleAsText = xhr.responseText;
+    var citeproc = new CSL.Engine(this.citeproc_sys, styleAsText);
+    return citeproc;
+  }
+};
+function format_citations(){
+  var document_ids = [];
+  $("#documents li").each(function(index, elem){
+    document_ids.push(elem.id);
+  });
+  console.log("format_citetions: document_ids::", document_ids);
+  var citeproc = LitCurate.get_processor(LitCurate.style);
+  citeproc.updateItems(document_ids);
+  var results = citeproc.makeBibliography();
+  console.log("format_citations: results::", results);
+  $.each(results[0].entry_ids, function(index, elem){
+    console.log("#"+elem, results[1][index]);
+    $("#"+elem).data("citation", results[1][index]);
+    $("#"+elem).attr("title", results[1][index]);
+    $("#"+elem).tooltip({ html: true });
+  });
+}
+
 function reset_all(){
   $("#documents").empty();
   $("#axis").empty();
@@ -42,12 +83,22 @@ function load_documents(folder){
             var year = data["year"];
             $("#documents").append('<li id="'+data["id"]+'" class="btn btn-default btn-sm document">'+author+", "+year+"</li>");
             prepare_draggable("#"+data["id"]);
+            // For CSL mapping:
+            if (!data.author){ data.author = data.authors }
+            $.each(data.author, function(i, e){
+              if (!data.author[i].given) { data.author[i].given = data.author[i].first_name; }
+              if (!data.author[i].family) { data.author[i].given = data.author[i].last_name; }
+            });
+            if (!data.issued){ data.issued = { raw: data.year } }
+            if (!data.page){ data.page = data.pages }
+            if (!data["container-title"]){ data["container-title"] = data.source }
             $("#"+data["id"]).data("metadata", data);
           }
         }));
       });
       $.when.apply($, ajax_calls).always(function(){
         $("span.loading-documents").fadeOut();
+        format_citations();
       });
     },
     error: error_report
