@@ -43,7 +43,7 @@
     <% else %>
       <div class="row">
         <div class="col-sm-12">
-          <%= markdown "about.#{I18n.locale}".to_sym %>
+          <%= markdown "about.#{I18n.locale[0,2]}".to_sym %>
         </div>
       </div>
     <% end %>
