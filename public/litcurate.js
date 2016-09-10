@@ -35,7 +35,10 @@ function format_citations(){
     console.log("#"+elem, results[1][index]);
     $("#"+elem).data("citation", results[1][index]);
     $("#"+elem).attr("title", results[1][index]);
-    $("#"+elem).tooltip({ html: true });
+    $("#"+elem).tooltip({
+      html: true,
+      placement: "auto top"
+    });
   });
 }
 
